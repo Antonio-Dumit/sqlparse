@@ -52,7 +52,7 @@ class ReindentFilter:
 
     def _next_token(self, tlist, idx=-1):
         split_words = ('FROM', 'STRAIGHT_JOIN$', 'JOIN$', 'AND', 'OR',
-                       'GROUP BY', 'ORDER BY', 'UNION', 'VALUES',
+                       'ON', 'GROUP BY', 'ORDER BY', 'UNION', 'VALUES',
                        'SET', 'BETWEEN', 'EXCEPT', 'HAVING', 'LIMIT')
         m_split = T.Keyword, split_words, True
         tidx, token = tlist.token_next_by(m=m_split, idx=idx)
@@ -99,6 +99,23 @@ class ReindentFilter:
         func_name = '_process_{cls}'.format(cls=type(tlist).__name__)
         func = getattr(self, func_name.lower(), self._process_default)
         func(tlist)
+
+    # def _process_on(self, tlist):
+    #     tidx, token = tlist.token_next_by(m=sql.On.M_OPEN)
+    #     while token:
+    #         eidx, end = tlist.token_next_by(m=sql.On.M_CLOSE, idx=tidx)
+
+    #         if end is None:
+    #             end = tlist._groupable_tokens[-1]
+    #         else:
+    #             end = tlist.tokens[eidx - 1]
+
+    #     eidx = tlist.token_index(end)
+    #     tlist.group_tokens(sql.On, tidx, eidx)
+    #     tlist.insert_before(tidx, self.nl())
+    #     import pprint; pprint.pprint(locals())
+    #     with indent(self):
+    #         self._process_default(tlist)
 
     def _process_where(self, tlist):
         tidx, token = tlist.token_next_by(m=(T.Keyword, 'WHERE'))
