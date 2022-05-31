@@ -545,6 +545,14 @@ class Comment(TokenList):
         return self.tokens and self.tokens[0].ttype == T.Comment.Multiline
 
 
+class On(TokenList):
+    """An ON clause"""
+    M_OPEN = T.Keyword, 'ON'
+    M_CLOSE = T.Keyword, (
+        'INNER', 'LEFT', 'RIGHT', 'JOIN', 'WHERE', 'ORDER BY', 'GROUP BY',
+        'LIMIT', 'UNION', 'EXCEPT', 'HAVING', 'RETURNING', 'INTO')
+
+
 class Where(TokenList):
     """A WHERE clause."""
     M_OPEN = T.Keyword, 'WHERE'
